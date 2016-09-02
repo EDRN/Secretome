@@ -1,0 +1,9 @@
+{% if form.is_multipart %}
+    <form enctype="multipart/form-data" method="post" action="copywtfileres">{% csrf_token %}
+{% else %}
+    <form method="post" action="/foo/">{% csrf_token %}
+{% endif %}
+Weightfile to copy: <input type="file" name="file"></input>
+<P>
+<input type='submit' value='Submit' />
+</form>

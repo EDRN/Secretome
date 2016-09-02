@@ -1,0 +1,9 @@
+{% if flist %}
+    {% for hguid in flist %}
+	<TR>
+	<TD><a href="{% url 'search_multihguid' %}?hguids={{ hguid.hguid }}">{{ hguid.hguid }}</a></TD>
+	</TR>
+    {% endfor %}
+{% else %}
+    <p>No HGU ids in Secretome database.</p>
+{% endif %}

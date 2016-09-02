@@ -1,0 +1,10 @@
+{% if DatabaseNames_list %}
+<H1>Databases in the Secretome DB</H1>
+    <ul>
+    {% for dbname in DatabaseNames_list %}
+        <li><a href="{% url 'databases' %}/{{ dbname }}/">{{ dbname }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No names in database.</p>
+{% endif %}

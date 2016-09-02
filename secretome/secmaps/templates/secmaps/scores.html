@@ -1,0 +1,21 @@
+{% load mathfilters %}
+{% if hguid %}
+{% autoescape off %}
+Total score for {{ hguid }} is {{ sumscore|floatformat:3 }}
+<TABLE BORDER=1 PADDING=10 TFTABLE>
+<TR><TH>DB</TH><TH>Wt.</TH><TH>n</TH><TH>genes</TH><TH>Score</TH></TR>
+{% for db in dbscores %}
+	<TR PADDING:30px>
+		<TD pADDING:30px > &nbsp; {{db.0}}</TD>
+		<TD pADDING:30px > &nbsp; {{db.1}}</TD>
+		<TD pADDING:30px > &nbsp; {{db.2}}</TD>
+		<TD pADDING:30px > &nbsp; {{db.3}}</TD>
+		<TD pADDING:30px > &nbsp; {{db.4|floatformat:3}}</TD>
+	</TR>
+{% endfor %}
+</TABLE>
+{% endautoescape %}
+{% else %}
+    <P>No such HGU id.</P>
+{% endif %}
+

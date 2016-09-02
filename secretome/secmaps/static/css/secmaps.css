@@ -1,0 +1,57 @@
+form{
+     display:inline;
+     margin:0px;
+     padding:0px;
+}
+
+h1 a {
+    color: #FCA205;
+}
+BODY {
+    padding-left: 15px;
+    padding-top: 15px;
+    padding-right: 15px;
+    padding-bottom: 15px;
+}
+th.rotate {
+  /* Something you can count on */
+  height: 190px;
+  white-space: nowrap;
+}
+
+th.rotate > div {
+  transform: 
+    /* Magic Numbers */
+    translate(2px, 65px)
+    /* 45 is really 360 - 45 */
+    rotate(270deg);
+  width: 30px;
+}
+th.rotate > div > span {
+  border-bottom: 1px solid #ccc;
+  padding: 5px 10px;
+}
+
+.TFtable th{
+    border-width: 1px;
+    padding: 8px;
+    border-style: solid;
+    border-color: #666666;
+    background-color: #dedede;
+}
+.TFtable tr{
+    background: #b8d1f3;
+}
+.TFtable tr:nth-child(odd){
+    background: #b8d1f3;
+}
+.TFtable tr:nth-child(even){
+    background: #dae5f4;
+}
+.TFtable td {
+    border-width: 1px;
+    padding: 8px;
+    border-style: solid;
+    border-color: #666666;
+}
+

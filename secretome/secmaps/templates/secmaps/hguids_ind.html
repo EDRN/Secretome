@@ -1,0 +1,18 @@
+{% load mathfilters %}
+{% if hguid %}
+{% autoescape off %}
+<TR><TD>{{ hguid }}</TD>
+{% endautoescape %}
+<TD>{{numsources}} </TD>
+<TD>{{numtimes}} </TD>
+{% autoescape off %}
+    {% for x in xlist %}
+        <TD>{{ x }}</TD>
+    {% endfor %}
+{% endautoescape %}
+<TD>{{ xsum }}</TD>
+    </TR>
+{% else %}
+    <TR><TD>No such HGU id in the Secretome database.</TD></TR>
+{% endif %}
+

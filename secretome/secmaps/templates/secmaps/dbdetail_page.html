@@ -1,0 +1,29 @@
+{% regroup flist by before_mapping as before_mapping_list %}
+    {% for d in before_mapping_list %}
+	<TR>
+	<TD> <A HREF=http://www.uniprot.org/uniprot/{{ d.grouper }}>{{ d.grouper }}</A> </TD><TD>
+
+	{% if d.list.0.mapped_hguid.hguid %}
+		<A HREF="{% url 'search_multihguid' %}?hguids=
+		{% for item in d.list %}
+			{{ item.mapped_hguid.hguid }},
+		{% endfor %}
+		">
+		{% for item in d.list %}
+			{{ item.mapped_hguid.hguid }},
+		{% endfor %}
+		</A>
+	{% else %}
+		{{ d.list.0.mapped_hguid.hguid }}
+   	{% endif %}
+{% comment %}
+#	{% for item in d.list %}
+#		{% if item.mapped_hguid_id != 'none' %}
+#			<A HREF="{% url 'search_multihguid' %}?hguids={{ item.mapped_hguid.hguid }}">{{ item.mapped_hguid.hguid }}</A>,
+#		{% else %}
+#			{{ item.mapped_hguid.hguid }}
+#    		{% endif %}
+#	{% endfor %}
+{% endcomment %}
+	</TD></TR>
+    {% endfor %}

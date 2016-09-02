@@ -1,0 +1,12 @@
+clark: 1.03
+GO:0005576: 1.1
+GO:0016020: 1.2
+gpcr.org_family: 1.4
+gpcr.org_structure: 1.33
+signal: 1.44
+spd: 1.6
+Stanford: 1.7
+Stanford_addl_list1: 1.92
+Stanford_addl_list2: 1.75
+uniprot_secreted1: 1.67
+Zhang: 1.31

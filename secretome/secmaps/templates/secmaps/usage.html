@@ -1,0 +1,119 @@
+{% load staticfiles %}
+<B>Purpose:</B><BR>
+The aim of the Secretome pages is to allow users to search for the presence of different
+Genes/Proteins in several databases. 
+
+<P>
+<B>Main Tabs:</B><BR>
+The main page shows 
+<UL>
+<LI> The usage (this page),
+<LI> A <A HREF="databases">list of databases</A> with count of HGU133plus2 Affymetrix IDs it contains,
+<LI> A <A HREF="hguids/1">list of HGU133plus2 Affymetrix IDs</A> in all databases included, and
+<LI> A form to search for one or more Genes/Proteins (comma separated)
+<LI> A form to upload a file with a list of IDs
+<LI> A form to upload a new wt. file (for databases - old, fixed wts. style)
+</UL>
+
+<P>
+<B>Databases:</B><BR>
+
+Revised Weighing Style:<BR>
+A Score (S) is assigned to each probeset id.
+This is determined in two parts:
+<OL>
+<LI> Each database is assigned a weight (w) based on, say, the extent of curation.
+<LI> Number of matches within a database: lower weight if the matches differ (q), higher if the matches are to the same gene (p)
+</OL>
+Details available on request.
+<P>
+The connectivity from probeset ids to databases to HGNC ids and genes is shown graphically using d3.js<BR>
+
+<P>
+Old Weighing Style:<BR>
+Each database has been given a weight. These have been set to:
+<P>
+<CODE>
+dbwts  = {'clark': 1.03, 'GO:0005576': 1.1, 'GO:0016020': 1.2, 'gpcr.org_family': 1.4, 'gpcr.org_structure': 1.33, 'signal': 1.44, 'spd': 1.6, 'Stanford': 1.7, 'Stanford_addl_list1': 1.92, 'Stanford_addl_list2': 1.75, 'uniprot_secreted1': 1.67, 'Zhang': 1.31}
+</CODE>
+<P>
+
+That can be changed by uploading a new wt file. The weights are additive in
+that if a Gene is located in 'clark' and 'Stanford' it will get a score of 1.03
++ 1.7 = 2.73.  <P>
+
+To use the new wtfile, for now the URL has to be directly modified. It will be incorporated as a more friendlier feature soon. For example, if default wts are denoted by the URL: <code>http://<i>&lt;secretomeURL&gt;</i>/secmaps/search-multihguid/?hguids=206552_s_at%2C+208048_at%2C+208049_s_at%2C+210637_at%2C+230908_at%2C</code> for the input set <code>"206552_s_at, 208048_at, 208049_s_at, 210637_at, 230908_at,"</code>:
+<OL>
+<LI> Replace "search-multihguid/?hguids=" with "search-multihguid2" in the URL
+<LI> Append "/newwts" if the file containing the wts you want to use is newwts
+<LI> If your original input list contained spaces, they would be reflected in the URL by '+', remove them
+<LI> The resulting URL will read: <code>http://<i>&lt;secretomeURL&gt;</i>/secmaps/search-multihguid2/206552_s_at%2C208048_at%2C208049_s_at%2C210637_at%2C230908_at%2C/newwts</code>
+<LI> Hit return in the URL bar 
+</OL>
+
+The scores are displayed when you search for one or more HGU133plus2 IDs, or
+click on collection obtained by clicking on a database. The table indicates
+number of databases an HGU133plus2 ID is found in as well as the number of
+times it is mapped. For example, in the figure below one can see that <I>1007_s_at</I>
+is found in 4 databases and mapped 28 times: Zhang (1), Uniprot Secreted (1), GO:0005576 (1) and GO:0016020 (25). The "Before Mapping" ids (25 or any of the 1's in this case) can be listed by clicking on that number.
+<P>
+The Gene/Proten IDs as well as the 'before mapping' strings are now linked to uniprot pages at http://www.uniprot.org/uniprot
+<P>
+
+<IMG SRC="{% static "images/multisearch1.png" %}">
+<BR>
+
+<P>
+<B>Features:</B><BR>
+<I>Pagination</I>: Pages showing lists are paginated with 30 items per page by default. For instance, the <I>gpcr.org_structure</I> database which has 280 entries, gets divide in to 10 pages, with the first 9 containing 30 entries and the last one having the remaining 10. Prev page and Next page tags are available at the top and bottom. An example for the top parts is shown below:
+<P>
+<IMG SRC="{% static "images/nextpage1.png" %}">
+<IMG SRC="{% static "images/nextpage2.png" %}">
+<P>
+The default pagination length can be changed by simply suffixing the desired number to the URL where you want a different pagination e.g. default pagination of 30 and page 3 for the database <I>gpcr.org_structure</I> has the url:
+<P>
+<CODE>
+https://<i>&lt;secretomeURL&gt;</i>/secmaps/databases/gpcr.org_structure/3
+</CODE>
+<P>
+Appending /100 leads to a pagination of 30
+<P>
+<CODE>
+https://<i>&lt;secretomeURL&gt;</i>/secmaps/databases/gpcr.org_structure/3/100
+</CODE>
+<P>
+
+If what you saw was
+<P>
+<CODE>
+https://<i>&lt;secretomeURL&gt;</i>/secmaps/databases/gpcr.org_structure/3/30
+</CODE>
+<P>
+then just replace the last 30 with 100 to get a pagination of 100.
+<P>
+
+<I>Sorting</I>: All tables are sortable on all columns. To sort on a particular column, just click in the top part of that column. Clicking a second time with reverse sort it. A dark trinagle will show up at the right edge of the column.
+<P>
+<IMG SRC="{% static "images/unsorted.png" %}"><BR>
+<P>
+<IMG SRC="{% static "images/sortedc1.png" %}">
+<IMG SRC="{% static "images/sortedc1r.png" %}"><BR>
+<P>
+<IMG SRC="{% static "images/sortedc2.png" %}">
+<IMG SRC="{% static "images/sortedc2r.png" %}"><BR>
+<P>
+
+<B>Bugs/Todos:</B><BR>
+<UL>
+<LI><I>Look and Feel</I>: Use the diazo engine to provide EDRN-uniform skin to the tool, and provide additional static resources.
+
+<LI><I>Pagination</I>: The count is currently on the RHS rather than LHS and implemented in the template (using regroup) rather than the view (i.e. the db). Doing it on the LHS is more legant and will also get around the issue of splitting a Gene across its different mappings: currently if the pagination count is up in the middle of multiple mappings that a Gene has, the remaining ones show up on the next page and thus the scores table does not show all the mappings in one place in the current scheme of things. Increasing the page length to contain the entire set avoids the issue.
+
+<LI><I>Sorting</I>: Sorting happens within the paginated length and not across the entire set when you click on a column header. Increasing the page length to contain the entire set avoids the issue.
+
+<LI><I>Plots</I>: Various plots can be added to the pages indicating frequencies etc.
+
+<LI> <I>Features</I> (a) Show another column with HGNC ID;
+(b) Link to an informational pages about the gene and protein, e.g. NCBI and PDB
+(c) Allow gene identifiers as input (e.g. HGNC, Entrez, Ensemble...). Mapping could be done with Biomart, or the SQL interfaces to Ensemble or UCSC genome browser
+</UL>

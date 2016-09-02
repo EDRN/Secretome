@@ -1,0 +1,62 @@
+{% load staticfiles %}
+<HEAD>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="{% static "css/secmaps.css" %}">
+</HEAD>
+<BODY>
+<IMG SRC="{% static "images/edrn.png" %}">
+<H1>The Secretome Project</H1>
+
+These webpages allow you to search for human-secreted proteins from certain
+databases. Maps between Affymetrix hgu133plus2 probeset identifiers and gene
+symbol, Uniprot Gene Symbol, GENBANK ID, Unigene ID, PDB protein ID, Uniprot
+Accession, and Uniprot ID were obtained from BioMART - ENSEMBLE GENES 63, Homo
+sapiens genes GRCh37.p3 (<A
+HREF=http://www.biomart.org>http://www.biomart.org</A>, Sept. 21, 2011),
+selecting two external IDs per map only - hgu133plus2 probeset and one of the
+above identifiers.  An additional candidate map for Uniprot ID was obtained
+from DAVID v6.7 (<A
+HREF=http://david.abcc.ncifcrf.gov/conversion.jsp>http://david.abcc.ncifcrf.gov/conversion.jsp</A>,
+Sept. 21, 2011).  The DAVID map contained conversions for all Affymetrix 3’
+arrays, so these were further narrowed down to hgu133plus2 maps only, using the
+hgu133plus2.db Bioconductor package (v. 2.4.5).  Identifiers from each
+secretome source database were checked against each map, and the map containing
+the highest fraction of these identifiers was used.  By this method, all
+identifiers were mapped to  zero, one, or more Affymetrix hgu133plus2 probeset
+identifiers in one step.  For each probeset identifier, a record was kept of
+which databases identified it, and which original identifiers mapped to it, to
+provide a record of how each probeset was identified.  All computations were
+performed in the R statistical environment v. 2.12.1 (R development Core Team,
+2010).  <P> Researchers: <A
+HREF=http://edrn.nci.nih.gov/sites/452-massachusetts-general-hospital/birrer-michael>Michael
+Birrer</A>, <A
+HREF=http://edrn.nci.nih.gov/sites/610-massachusetts-general-hospital/skates-steven>Steven
+Skates</A>, <A
+HREF=mailto:levi.waldron@hunter.cuny.edu?subject=Secretome%20Tool>Levi
+Waldron</A>
+
+<HR>
+<a href="{% url 'usage' %}">Usage</a></li><br>
+<a href="{% url 'databases' %}">Databases</a></li><br>
+<a href="{% url 'hguids' 1 %}">Mapped Affymetrix HGU133plus2 IDs</a></li><br>
+<p>
+
+<P>
+Search on one or more (comma separated) HGUids:
+    <form action="{% url 'search_multihguid' %}" method="get">
+        <input type="text" name="hguids">
+        <input type="submit" value="Search">
+    </form>
+
+<P>
+<P> Search on one or more HGUids using an input file (one per line):
+<form enctype="multipart/form-data" method="post" action="{% url 'displayhguidsfromfile' %}">{% csrf_token %}
+<input id="id_file" name="file" type="file" /><input type="submit" value="Submit" /> </form>
+<P>
+
+<A HREF="{% url 'copywtfile' %}">Copy file with weights for databases for future use</A>
+
+<HR>
+Last outdated: 30 Aug 2016
+</BODY>
