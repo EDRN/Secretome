@@ -3,7 +3,7 @@
 ## Getting your release up to speed
 
 0. Install Django (1.8.3+), mysql and Apache configuration
-1. Download a release from https://github.com/AshishMahabal/Secretome
+1. Download a release from https://github.com/EDRN/Secretome
 2. Extract the archive in /usr/local/edrn/secretome
 3. Change into that directory
 4. Add the local_settings.py if it does not exist (details below)
