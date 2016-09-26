@@ -553,12 +553,66 @@ def get_json(hguid):
 	return (myjson,dbscores,sumscore)
 
 ##############################################################################
+def get_json2(hguid):
+        """Creates a json file that provides links to dbs and genes from HGNC id
+
+        Makes use of a file called bigger_table in secretome_uploads
+        The file was created through an API to uniprot by David
+        If possible all this should be made more elegant
+
+        The json file is later used with d3 to make sankey plot
+        """
+        details = {}
+#        for line in open(settings.MEDIA_ROOT + "/bigger_table","r"):
+        for line in open("/Users/aam/Django/secretome_uploads/bigger_table","r"):
+                rows = line.rstrip().split()
+                if rows[0] in details:
+                        details[rows[0]] = details[rows[0]] + ",%s %s %s" % (rows[1],rows[2],rows[3])
+                else:
+                        details[rows[0]] = "%s %s %s" % (rows[1],rows[2],rows[3])
+
+	names = [hguid]
+	links =[]
+	vals = {}
+        myjson = '\'{"nodes": [' 
+        for el in details[hguid].split(','):
+                (db, hgnc, gene) = el.rstrip().split()
+		if db not in names:
+			names.append(db)
+			link_tup = (0,names.index(db))
+			links.append(link_tup)
+			vals[db] = 1
+		else:
+			vals[db] += 1
+		if hgnc not in names:
+			names.append(hgnc)
+		link_tup = (names.index(db),names.index(hgnc))
+		links.append(link_tup)
+		if gene not in names:
+			names.append(gene)
+		link_tup = (names.index(hgnc),names.index(gene))
+		links.append(link_tup)
+
+	for el in range(len(names)):
+		myjson += '{"name":"%s"},' % names[el]
+	myjson = myjson[:-1] + '], "links":[ '
+	for el in range(len(links)):
+		value = 1
+		if links[el][0] == 0:
+			value = vals[names[links[el][1]]]
+		myjson += '{"source":%s,"target":%s,"value":%s},' % (links[el][0],links[el][1],value)
+	myjson = myjson[:-1] + ' ]}\''
+
+        return (myjson)
+
+##############################################################################
 def plotd3(request,hguid):
         """Use d3.js to show connectivity for a given HGU id"""
         message = 'You searched for: %r' % hguid
         httplist = cssheader() + topmenu() + mainmenu() 
         httplist = httplist + '<DIV ALIGN="center">'
         (myjson, dbscores, sumscore) = get_json(hguid)
+        myjson2 = get_json2(hguid)
         httplist = httplist + '</DIV>'
         httplist = httplist + '<DIV ALIGN="center">'
 
@@ -567,6 +621,15 @@ def plotd3(request,hguid):
             'hguid': hguid,
             'dbscores': dbscores,
             'sumscore': sumscore,
+            })
+        httplist = httplist + template.render(context)
+        httplist = httplist + '</DIV>'
+        httplist = httplist + '<DIV ALIGN="center">'
+
+        template = loader.get_template('secmaps/plot_sankey.html')
+        context = RequestContext(request, {
+            'hguid': hguid,
+            'myjson': myjson2,
             })
         httplist = httplist + template.render(context)
         httplist = httplist + '</DIV>'
