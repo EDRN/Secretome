@@ -493,64 +493,64 @@ def get_beforemapping_names(request,dbname,hguid):
 
 ##############################################################################
 def get_json(hguid):
-	"""Creates a json file that provides links to dbs and genes from HGNC id
+        """Creates a json file that provides links to dbs and genes from HGNC id
 
-	Makes use of a file called bigger_table in secretome_uploads
-	The file was created through an API to uniprot by David
-	If possible all this should be made more elegant
+        Makes use of a file called bigger_table in secretome_uploads
+        The file was created through an API to uniprot by David
+        If possible all this should be made more elegant
 
-	The dbwts used here are not the same as used elsewhere. These are in inverse
-	proportion to number of ids in a database.
-	The wts are later combined with frequencies to provid a better weighing.
+        The dbwts used here are not the same as used elsewhere. These are in inverse
+        proportion to number of ids in a database.
+        The wts are later combined with frequencies to provid a better weighing.
 
-	The json file is later used with d3 to make connectivity plots
-	"""
-	details = {}
-	for line in open(settings.MEDIA_ROOT + "/bigger_table","r"):
-		rows = line.rstrip().split()
-		if rows[0] in details:
-			details[rows[0]] = details[rows[0]] + ",%s %s %s" % (rows[1],rows[2],rows[3])
-		else:
-			details[rows[0]] = "%s %s %s" % (rows[1],rows[2],rows[3])
+        The json file is later used with d3 to make connectivity plots
+        """
+        details = {}
+        for line in open(settings.MEDIA_ROOT + "/bigger_table","r"):
+                rows = line.rstrip().split()
+                if rows[0] in details:
+                        details[rows[0]] = details[rows[0]] + ",%s %s %s" % (rows[1],rows[2],rows[3])
+                else:
+                        details[rows[0]] = "%s %s %s" % (rows[1],rows[2],rows[3])
 
-	dbwts = {"clark":        0.510, "GO:0005576":    0.224, "GO:0016020":    0.044, "gpcr.org_family":       0.548, "gpcr.org_structure":    3.571, "signal":        1.086, "spd":   0.167, "Stanford":      0.276, "Stanford_addl_list1":   0.896, "Stanford_addl_list2":   1.570, "uniprot_secreted1":     0.200, "Zhang": 0.145}
-	sumscore = 0
-	dbscores = []
-	knowndb = ""
-	thisdb = 0
-	dbs = 0
-	hgncs = {}
-	myjson = '{"name": "%s", "children": [{' % hguid
-	for el in details[hguid].split(','):
-		(db, hgnc, gene) = el.rstrip().split()
-		if db != knowndb:		# Change of db - could be first
-			dbs = dbs + 1
-			if thisdb == 0:		# First db encountered
-				thisdb = 1
-			else:			# New db but not first
-				myjson =myjson + "]},{"
-				this_score = dbwts[knowndb]*hgncs[knowndb]*len(dbgenes)
-				dbscores.append([knowndb,dbwts[knowndb],hgncs[knowndb],dbgenes,this_score])
-				sumscore = sumscore + this_score
-			knowndb = db
-			hgncs[db] = 1
-			dbgenes = {}
-			dbgenes[gene] = 1
-			myjson =myjson +  '"name": "%s", "children": [' % db
-			myjson =myjson +  '{"name": "%s", "children": [{"name": "%s"}]}' % (hgnc, gene)
-		else:				# Same db as before
-			hgncs[db] = hgncs[db] + 1
-			myjson =myjson +  ',{"name": "%s", "children": [{"name": "%s"}]}' % (hgnc, gene)
-			if gene not in dbgenes:
-				dbgenes[gene] = 1
-			else:			# New gene
-				dbgenes[gene] = dbgenes[gene] + 1
-	myjson= myjson + "]}]}"
-	this_score = dbwts[knowndb]*hgncs[knowndb]*len(dbgenes)
-	dbscores.append([knowndb,dbwts[knowndb],hgncs[knowndb],dbgenes,this_score])# The final db
-	sumscore = sumscore + this_score
+        dbwts = {"clark":        0.510, "GO:0005576":    0.224, "GO:0016020":    0.044, "gpcr.org_family":       0.548, "gpcr.org_structure":    3.571, "signal":        1.086, "spd":   0.167, "Stanford":      0.276, "Stanford_addl_list1":   0.896, "Stanford_addl_list2":   1.570, "uniprot_secreted1":     0.200, "Zhang": 0.145}
+        sumscore = 0
+        dbscores = []
+        knowndb = ""
+        thisdb = 0
+        dbs = 0
+        hgncs = {}
+        myjson = '{"name": "%s", "children": [{' % hguid
+        for el in details[hguid].split(','):
+                (db, hgnc, gene) = el.rstrip().split()
+                if db != knowndb:                # Change of db - could be first
+                        dbs = dbs + 1
+                        if thisdb == 0:                # First db encountered
+                                thisdb = 1
+                        else:                        # New db but not first
+                                myjson =myjson + "]},{"
+                                this_score = dbwts[knowndb]*hgncs[knowndb]*len(dbgenes)
+                                dbscores.append([knowndb,dbwts[knowndb],hgncs[knowndb],dbgenes,this_score])
+                                sumscore = sumscore + this_score
+                        knowndb = db
+                        hgncs[db] = 1
+                        dbgenes = {}
+                        dbgenes[gene] = 1
+                        myjson =myjson +  '"name": "%s", "children": [' % db
+                        myjson =myjson +  '{"name": "%s", "children": [{"name": "%s"}]}' % (hgnc, gene)
+                else:                                # Same db as before
+                        hgncs[db] = hgncs[db] + 1
+                        myjson =myjson +  ',{"name": "%s", "children": [{"name": "%s"}]}' % (hgnc, gene)
+                        if gene not in dbgenes:
+                                dbgenes[gene] = 1
+                        else:                        # New gene
+                                dbgenes[gene] = dbgenes[gene] + 1
+        myjson= myjson + "]}]}"
+        this_score = dbwts[knowndb]*hgncs[knowndb]*len(dbgenes)
+        dbscores.append([knowndb,dbwts[knowndb],hgncs[knowndb],dbgenes,this_score])# The final db
+        sumscore = sumscore + this_score
 
-	return (myjson,dbscores,sumscore)
+        return (myjson,dbscores,sumscore)
 
 ##############################################################################
 def get_json2(hguid):
@@ -561,50 +561,49 @@ def get_json2(hguid):
         If possible all this should be made more elegant
 
         The json file is later used with d3 to make sankey plot
-	
-	Known failing: Does not behave properly for cases like 211616_s_at
-	where hgnc id and gene id are the same (in this case in Stanford_addl_list1)
+        
+        Known failing: Does not behave properly for cases like 211616_s_at
+        where hgnc id and gene id are the same (in this case in Stanford_addl_list1)
         """
         details = {}
-#        for line in open(settings.MEDIA_ROOT + "/bigger_table","r"):
-        for line in open("/Users/aam/Django/secretome_uploads/bigger_table","r"):
+        for line in open(settings.MEDIA_ROOT + "/bigger_table","r"):
                 rows = line.rstrip().split()
                 if rows[0] in details:
                         details[rows[0]] = details[rows[0]] + ",%s %s %s" % (rows[1],rows[2],rows[3])
                 else:
                         details[rows[0]] = "%s %s %s" % (rows[1],rows[2],rows[3])
 
-	names = [hguid]
-	links =[]
-	vals = {}
+        names = [hguid]
+        links =[]
+        vals = {}
         myjson = '\'{"nodes": [' 
         for el in details[hguid].split(','):
                 (db, hgnc, gene) = el.rstrip().split()
-		if db not in names:
-			names.append(db)
-			link_tup = (0,names.index(db))
-			links.append(link_tup)
-			vals[db] = 1
-		else:
-			vals[db] += 1
-		if hgnc not in names:
-			names.append(hgnc)
-		link_tup = (names.index(db),names.index(hgnc))
-		links.append(link_tup)
-		if gene not in names:
-			names.append(gene)
-		link_tup = (names.index(hgnc),names.index(gene))
-		links.append(link_tup)
+                if db not in names:
+                        names.append(db)
+                        link_tup = (0,names.index(db))
+                        links.append(link_tup)
+                        vals[db] = 1
+                else:
+                        vals[db] += 1
+                if hgnc not in names:
+                        names.append(hgnc)
+                link_tup = (names.index(db),names.index(hgnc))
+                links.append(link_tup)
+                if gene not in names:
+                        names.append(gene)
+                link_tup = (names.index(hgnc),names.index(gene))
+                links.append(link_tup)
 
-	for el in range(len(names)):
-		myjson += '{"name":"%s"},' % names[el]
-	myjson = myjson[:-1] + '], "links":[ '
-	for el in range(len(links)):
-		value = 1
-		if links[el][0] == 0:
-			value = vals[names[links[el][1]]]
-		myjson += '{"source":%s,"target":%s,"value":%s},' % (links[el][0],links[el][1],value)
-	myjson = myjson[:-1] + ' ]}\''
+        for el in range(len(names)):
+                myjson += '{"name":"%s"},' % names[el]
+        myjson = myjson[:-1] + '], "links":[ '
+        for el in range(len(links)):
+                value = 1
+                if links[el][0] == 0:
+                        value = vals[names[links[el][1]]]
+                myjson += '{"source":%s,"target":%s,"value":%s},' % (links[el][0],links[el][1],value)
+        myjson = myjson[:-1] + ' ]}\''
 
         return (myjson)
 
