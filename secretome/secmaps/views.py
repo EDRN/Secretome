@@ -561,6 +561,9 @@ def get_json2(hguid):
         If possible all this should be made more elegant
 
         The json file is later used with d3 to make sankey plot
+	
+	Known failing: Does not behave properly for cases like 211616_s_at
+	where hgnc id and gene id are the same (in this case in Stanford_addl_list1)
         """
         details = {}
 #        for line in open(settings.MEDIA_ROOT + "/bigger_table","r"):
