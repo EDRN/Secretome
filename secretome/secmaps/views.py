@@ -68,11 +68,17 @@ def displayhguidsfromfile(request):
     from Secretome folks
     """
 
+# The following lines appear elsewhere too. This needs to be refactored
 # Wts for dbs provided here. This mode is likely to go away
-    dbwts  = {'clark': 1.03, 'GO:0005576': 1.1, 'GO:0016020': 1.2, 
-      'gpcr.org_family': 1.4, 'gpcr.org_structure': 1.33, 'signal': 1.44, 
-      'spd': 1.6, 'Stanford': 1.7, 'Stanford_addl_list1': 1.92, 
-      'Stanford_addl_list2': 1.75, 'uniprot_secreted1': 1.67, 'Zhang': 1.31}
+#    dbwts  = {'clark': 1.03, 'GO:0005576': 1.1, 'GO:0016020': 1.2, 
+#      'gpcr.org_family': 1.4, 'gpcr.org_structure': 1.33, 'signal': 1.44, 
+#      'spd': 1.6, 'Stanford': 1.7, 'Stanford_addl_list1': 1.92, 
+#      'Stanford_addl_list2': 1.75, 'uniprot_secreted1': 1.67, 'Zhang': 1.31}
+#	Revised wts based on email from Michael Bierrer on 28 Nov 2016
+    dbwts  = {'clark': 4, 'GO:0005576': 8, 'GO:0016020': 5, 
+      'gpcr.org_family': 3, 'gpcr.org_structure': 3, 'signal': 4, 
+      'spd': 8, 'Stanford': 6, 'Stanford_addl_list1': 6, 
+      'Stanford_addl_list2': 6, 'uniprot_secreted1': 6, 'Zhang': 4}
 ##    rowmat = []
 
 # Read file and strip it into a list of HGUids
@@ -312,7 +318,17 @@ def search_multihguid(request):
     Also links to d3 graphics
     The rowmat part is superceded and can go. TTL comments from Secretome group about wts.
     """
-    dbwts  = {'clark': 1.03, 'GO:0005576': 1.1, 'GO:0016020': 1.2, 'gpcr.org_family': 1.4, 'gpcr.org_structure': 1.33, 'signal': 1.44, 'spd': 1.6, 'Stanford': 1.7, 'Stanford_addl_list1': 1.92, 'Stanford_addl_list2': 1.75, 'uniprot_secreted1': 1.67, 'Zhang': 1.31}
+# The following lines appear elsewhere too. This needs to be refactored
+# Wts for dbs provided here. This mode is likely to go away
+#    dbwts  = {'clark': 1.03, 'GO:0005576': 1.1, 'GO:0016020': 1.2, 
+#      'gpcr.org_family': 1.4, 'gpcr.org_structure': 1.33, 'signal': 1.44, 
+#      'spd': 1.6, 'Stanford': 1.7, 'Stanford_addl_list1': 1.92, 
+#      'Stanford_addl_list2': 1.75, 'uniprot_secreted1': 1.67, 'Zhang': 1.31}
+#	Revised wts based on email from Michael Bierrer on 28 Nov 2016
+    dbwts  = {'clark': 4, 'GO:0005576': 8, 'GO:0016020': 5, 
+      'gpcr.org_family': 3, 'gpcr.org_structure': 3, 'signal': 4, 
+      'spd': 8, 'Stanford': 6, 'Stanford_addl_list1': 6, 
+      'Stanford_addl_list2': 6, 'uniprot_secreted1': 6, 'Zhang': 4}
 ##    rowmat = []
     if 'hguids' in request.GET:
         message = 'You searched for: %r' % request.GET['hguids']
@@ -425,7 +441,17 @@ def csv_view(request,hguidinlist):
     Some duplication with a couple of other functions. 
     Subject to refactoring.
     """
-    dbwts  = {'clark': 1.03, 'GO:0005576': 1.1, 'GO:0016020': 1.2, 'gpcr.org_family': 1.4, 'gpcr.org_structure': 1.33, 'signal': 1.44, 'spd': 1.6, 'Stanford': 1.7, 'Stanford_addl_list1': 1.92, 'Stanford_addl_list2': 1.75, 'uniprot_secreted1': 1.67, 'Zhang': 1.31}
+# The following lines appear elsewhere too. This needs to be refactored
+# Wts for dbs provided here. This mode is likely to go away
+#    dbwts  = {'clark': 1.03, 'GO:0005576': 1.1, 'GO:0016020': 1.2, 
+#      'gpcr.org_family': 1.4, 'gpcr.org_structure': 1.33, 'signal': 1.44, 
+#      'spd': 1.6, 'Stanford': 1.7, 'Stanford_addl_list1': 1.92, 
+#      'Stanford_addl_list2': 1.75, 'uniprot_secreted1': 1.67, 'Zhang': 1.31}
+#	Revised wts based on email from Michael Bierrer on 28 Nov 2016
+    dbwts  = {'clark': 4, 'GO:0005576': 8, 'GO:0016020': 5, 
+      'gpcr.org_family': 3, 'gpcr.org_structure': 3, 'signal': 4, 
+      'spd': 8, 'Stanford': 6, 'Stanford_addl_list1': 6, 
+      'Stanford_addl_list2': 6, 'uniprot_secreted1': 6, 'Zhang': 4}
     rowmat = []
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="details.csv"'
@@ -513,7 +539,12 @@ def get_json(hguid):
                 else:
                         details[rows[0]] = "%s %s %s" % (rows[1],rows[2],rows[3])
 
-        dbwts = {"clark":        0.510, "GO:0005576":    0.224, "GO:0016020":    0.044, "gpcr.org_family":       0.548, "gpcr.org_structure":    3.571, "signal":        1.086, "spd":   0.167, "Stanford":      0.276, "Stanford_addl_list1":   0.896, "Stanford_addl_list2":   1.570, "uniprot_secreted1":     0.200, "Zhang": 0.145}
+#        dbwts = {"clark":        0.510, "GO:0005576":    0.224, "GO:0016020":    0.044, "gpcr.org_family":       0.548, "gpcr.org_structure":    3.571, "signal":        1.086, "spd":   0.167, "Stanford":      0.276, "Stanford_addl_list1":   0.896, "Stanford_addl_list2":   1.570, "uniprot_secreted1":     0.200, "Zhang": 0.145}
+#	Revised wts based on email from Michael Bierrer on 28 Nov 2016
+        dbwts  = {'clark': 4, 'GO:0005576': 8, 'GO:0016020': 5, 
+      		'gpcr.org_family': 3, 'gpcr.org_structure': 3, 'signal': 4, 
+      		'spd': 8, 'Stanford': 6, 'Stanford_addl_list1': 6, 
+      		'Stanford_addl_list2': 6, 'uniprot_secreted1': 6, 'Zhang': 4}
         sumscore = 0
         dbscores = []
         knowndb = ""
